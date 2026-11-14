@@ -1,0 +1,18 @@
+{% extends "auth/base.html" %}
+{% from "auth/_macros.html" import head, alert, field, submit %}
+{% block title %}Set a new password – {{ biz }}{% endblock %}
+{% block card %}
+{% if invalid %}
+{{ head("lock", "Link not valid", "This reset link has expired or was already used") }}
+<p class="lg-center"><a href="/admin/forgot-password" class="lg-btn">Request a new link</a></p>
+{% else %}
+{{ head("lock", "New Password", "Choose a password with at least 10 characters") }}
+{% if error %}{{ alert("error", error) }}{% endif %}
+<form method="post" action="/admin/reset-password/{{ token }}" data-loading class="lg-form">
+  {{ field("lock", "password", "New password", "password", "At least 10 characters", "new-password", 200, true, true) }}
+  {{ field("lock", "confirm", "Repeat password", "password", "Type it again", "new-password", 200, true) }}
+  {{ submit("Update password", "Saving…", false) }}
+</form>
+{% endif %}
+<p class="lg-center"><a href="/admin/login" class="lg-link">Back to login</a></p>
+{% endblock %}

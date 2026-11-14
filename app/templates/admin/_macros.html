@@ -1,0 +1,11 @@
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token }}">{% endmacro %}
+{% macro status_badge(key) %}<span class="badge {{ STATUS_STYLES[key] }}">{{ STATUS_LABELS[key] }}</span>{% endmacro %}
+{% macro pager(pg, base_qs, path) %}
+{% if pg.pages > 1 %}
+<nav class="mt-4 flex items-center justify-between gap-3 text-sm" aria-label="Pages">
+  {% if pg.has_prev %}<a class="btn-outline btn-sm" href="{{ path }}?{{ base_qs ~ '&' if base_qs else '' }}page={{ pg.page - 1 }}">Previous</a>{% else %}<span></span>{% endif %}
+  <span class="text-brand-muted">Page {{ pg.page }} of {{ pg.pages }} · {{ pg.total }} in total</span>
+  {% if pg.has_next %}<a class="btn-outline btn-sm" href="{{ path }}?{{ base_qs ~ '&' if base_qs else '' }}page={{ pg.page + 1 }}">Next</a>{% else %}<span></span>{% endif %}
+</nav>
+{% endif %}
+{% endmacro %}

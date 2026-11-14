@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import csrf with context %}
+{% block title %}{{ 'Edit' if svc else 'Add' }} service – Admin{% endblock %}
+{% block content %}
+<a href="/admin/services" class="text-sm font-medium text-brand-red hover:underline">← Services</a>
+<h1 class="mb-6 mt-2 text-3xl font-bold">{{ 'Edit ' ~ svc.name if svc else 'Add a service' }}</h1>
+<form method="post" action="{{ '/admin/services/' ~ svc.id if svc else '/admin/services' }}" class="card grid max-w-2xl gap-4 p-6">{{ csrf() }}
+  <label class="grid gap-1.5 text-sm font-medium">Service name<input name="name" required minlength="2" maxlength="120" value="{{ svc.name if svc else '' }}" class="field"></label>
+  <label class="grid gap-1.5 text-sm font-medium">Short description<textarea name="description" rows="2" maxlength="300" class="field">{{ svc.description if svc else '' }}</textarea></label>
+  <fieldset class="grid gap-2"><legend class="mb-1 text-sm font-medium">Show under</legend>
+    <div class="flex flex-wrap gap-x-6 gap-y-2 text-[15px]">{% for c in categories %}<label class="flex items-center gap-2"><input type="checkbox" name="category" value="{{ c.slug }}" class="h-4 w-4 accent-brand-red" {% if svc and c.slug in svc.category_slugs %}checked{% endif %}> {{ c.name }}</label>{% endfor %}</div></fieldset>
+  <label class="grid gap-1.5 text-sm font-medium sm:max-w-[220px]">Price (KSh)<input name="price" inputmode="numeric" placeholder="Empty = ask for quote" value="{{ svc.price if svc and svc.price is not none else '' }}" class="field"></label>
+  <label class="flex items-center gap-2 text-[15px]"><input type="checkbox" name="active" class="h-4 w-4 accent-brand-red" {% if not svc or svc.active %}checked{% endif %}> Active (visible on the website)</label>
+  <div class="flex gap-3"><button type="submit" class="btn btn-sm">{{ 'Save changes' if svc else 'Add service' }}</button><a href="/admin/services" class="btn-outline btn-sm">Cancel</a></div>
+</form>
+{% endblock %}

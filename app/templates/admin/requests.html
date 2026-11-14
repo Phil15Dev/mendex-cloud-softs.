@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import csrf, status_badge, pager with context %}
+{% block title %}Requests – Admin{% endblock %}
+{% block content %}
+<div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+  <div><h1 class="text-3xl font-bold">Requests</h1><p class="mt-1 text-brand-muted">{{ pg.total }} found</p></div>
+  {% if 'reports.export' in perms %}<a href="/admin/export/requests.csv{{ '?' ~ base_qs if base_qs else '' }}" class="btn-outline btn-sm">Export CSV</a>{% endif %}
+</div>
+<div class="mb-4 flex flex-wrap gap-2">
+  <a href="/admin/requests" class="badge {{ 'bg-brand-ink text-white' if not f.status else 'bg-slate-100 text-slate-600' }}">All ({{ total }})</a>
+  {% for k, label in STATUS_LABELS.items() %}<a href="/admin/requests?status={{ k }}" class="badge {{ STATUS_STYLES[k] }} {{ 'ring-2 ring-brand-ink/30' if f.status == k }}">{{ label }} ({{ counts.get(k, 0) }})</a>{% endfor %}
+</div>
+<form method="get" action="/admin/requests" class="card mb-4 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-5">
+  <input name="q" value="{{ f.q or '' }}" placeholder="Code, name or phone" aria-label="Search" class="field lg:col-span-2">
+  <select name="status" aria-label="Status" class="field"><option value="">Any status</option>{% for k, label in STATUS_LABELS.items() %}<option value="{{ k }}" {% if f.status == k %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+  <select name="service_id" aria-label="Service" class="field"><option value="">Any service</option>{% for s in services %}<option value="{{ s.id }}" {% if f.service_id == s.id|string %}selected{% endif %}>{{ s.name }}</option>{% endfor %}</select>
+  <input type="date" name="date_from" value="{{ f.date_from or '' }}" aria-label="From date" class="field">
+  <input type="date" name="date_to" value="{{ f.date_to or '' }}" aria-label="To date" class="field">
+  <div class="flex gap-2 lg:col-span-2"><button type="submit" class="btn btn-sm">Filter</button><a href="/admin/requests" class="btn-outline btn-sm">Clear</a></div>
+</form>
+<div class="card overflow-x-auto">
+  <table class="w-full min-w-[760px] text-left text-[15px]">
+    <thead class="border-b border-slate-300/70 bg-brand-cream text-sm text-brand-muted"><tr><th class="px-4 py-3 font-medium">Code</th><th class="px-4 py-3 font-medium">Customer</th><th class="px-4 py-3 font-medium">Service</th><th class="px-4 py-3 font-medium">Status</th><th class="px-4 py-3 font-medium">Received</th></tr></thead>
+    <tbody>{% for r in pg.items %}
+      <tr class="border-b border-slate-300/70 last:border-0 hover:bg-brand-cream">
+        <td class="px-4 py-3"><a class="font-display font-bold text-brand-red hover:underline" href="/admin/requests/{{ r.id }}">{{ r.code }}</a></td>
+        <td class="px-4 py-3">{{ r.customer.name }}<br><span class="text-sm text-brand-muted">+{{ r.customer.phone }}</span></td>
+        <td class="px-4 py-3">{{ r.service_name }}</td>
+        <td class="px-4 py-3">{{ status_badge(r.status) }}</td>
+        <td class="px-4 py-3 text-brand-muted">{{ r.created_at|eat('%d %b, %H:%M') }}</td>
+      </tr>{% else %}<tr><td colspan="5" class="px-4 py-10 text-center text-brand-muted">No requests found.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ pager(pg, base_qs, "/admin/requests") }}
+{% endblock %}

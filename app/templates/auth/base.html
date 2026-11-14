@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Admin – {{ biz }}{% endblock %}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/static/logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Manrope:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/static/tailwind.css">
+<link rel="stylesheet" href="/static/auth.css">
+</head>
+<body class="flex min-h-screen flex-col bg-white">
+<main class="grid flex-1 lg:grid-cols-[46fr_54fr]">
+  <section class="relative isolate overflow-hidden bg-[#f4f6fb] px-6 pb-12 pt-[calc(2.5rem+env(safe-area-inset-top,0px))] text-white sm:px-12 lg:px-14 lg:py-14">
+    <svg aria-hidden="true" class="absolute inset-0 -z-10 h-full w-full" viewBox="0 0 700 1000" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1830"/><stop offset="1" stop-color="#12315c"/></linearGradient>
+        <linearGradient id="redg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d0202b"/><stop offset="1" stop-color="#7d0b14"/></linearGradient>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#fff" stroke-opacity=".05"/></pattern>
+        <clipPath id="shape"><path d="M0 0H690C655 280 640 700 672 1000H0Z"/></clipPath>
+      </defs>
+      <g clip-path="url(#shape)">
+        <rect width="700" height="1000" fill="url(#navy)"/>
+        <rect width="700" height="1000" fill="url(#grid)"/>
+        <path d="M0 0H430C250 70 90 170 0 330Z" fill="url(#redg)"/>
+        <path d="M0 840C220 935 500 945 690 825L700 1000H0Z" fill="url(#redg)"/>
+      </g>
+    </svg>
+    <div class="relative mx-auto max-w-md lg:mx-0 lg:max-w-none">
+      <img src="/static/logo.png" alt="{{ biz }} logo" class="h-24 w-24 rounded-xl bg-white object-contain p-2 lg:h-32 lg:w-32">
+      {% set parts = biz.split(' ', 1) %}
+      <p class="mt-8 font-display text-4xl font-bold leading-[1.1] tracking-[-0.02em] lg:text-5xl">{{ parts[0] }}{% if parts|length > 1 %}<br>{{ parts[1] }}{% endif %}</p>
+      <p class="mt-5 text-xl italic">Fast <span class="mx-2" aria-hidden="true">•</span> Secure <span class="mx-2" aria-hidden="true">•</span> Reliable</p>
+      <div class="mt-6 h-1 w-28 bg-brand-red"></div>
+      <p class="mt-6 hidden max-w-[28ch] text-lg italic leading-snug text-white/90 sm:block">Your trusted partner for digital services and online solutions.</p>
+      <ul class="mt-10 hidden gap-5 lg:grid">
+        {% for label, path in [("Secure Access", '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>'), ("Efficient Service", '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>'), ("24/7 Support", '<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="2"/><rect x="17" y="14" width="4" height="6" rx="2"/><path d="M19 20c0 1.5-2 2-5 2"/>')] %}
+        <li class="flex items-center gap-5 text-lg">
+          <span class="grid h-12 w-12 place-items-center rounded-full border border-white/70"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ path|safe }}</svg></span>{{ label }}
+        </li>{% endfor %}
+      </ul>
+    </div>
+  </section>
+  <section class="grid place-items-center bg-[#f4f6fb] px-5 py-10 lg:px-10">
+    <div class="lg-card rounded-xl bg-white shadow-[0_10px_40px_rgba(20,24,31,0.08)]">{% block card %}{% endblock %}</div>
+  </section>
+</main>
+<footer class="border-t border-slate-300/70 bg-white px-5 py-5 text-center text-[15px]">
+  <p>© 2026 {{ biz }}. All rights reserved.</p>
+  <p class="italic text-brand-muted">Empowering your digital world</p>
+</footer>
+<script src="/static/js/app.js" defer></script>
+</body></html>

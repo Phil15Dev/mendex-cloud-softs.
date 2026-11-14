@@ -1,0 +1,120 @@
+{% extends "public/base.html" %}
+{% from "public/_rows.html" import rows, cards %}
+{% block content %}
+<section id="home" class="mx-auto grid max-w-[1700px] gap-10 px-5 py-10 lg:grid-cols-2 lg:gap-0 lg:py-12">
+  <div class="flex flex-col justify-center lg:pr-16">
+    <p class="mb-7 flex items-center gap-3 text-lg font-bold uppercase tracking-[.12em] text-brand-red sm:text-[22px]"><span class="h-3 w-3 bg-brand-red" aria-hidden="true"></span>Mendex Cloud Softs · Kenya</p>
+    <h1 class="font-display text-5xl font-extrabold leading-[1.08] tracking-tight text-brand-ink sm:text-6xl lg:text-[5.25rem]">Online services, made <span class="text-brand-red">simpler.</span></h1>
+    <p class="mt-8 max-w-[30ch] text-xl leading-[1.9] text-brand-muted sm:text-2xl">Get friendly help with government, education and everyday online services.</p>
+    <div class="mt-10 flex flex-wrap gap-4">
+      <a href="#start" class="btn px-7">Get Started
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="/services" class="btn-outline px-7">Explore services</a>
+    </div>
+    <p class="mt-10 text-lg text-brand-muted">Clear service prices · Personal assistance · Based in Kenya</p>
+  </div>
+  <div class="relative min-h-[380px] overflow-hidden sm:min-h-[480px] lg:min-h-[680px]">
+    {% if has_hero %}
+    <img src="/static/hero.jpg" alt="Woman using a laptop to complete an online application" class="absolute inset-0 h-full w-full object-cover object-right">
+    {% else %}
+    <svg class="absolute inset-0 h-full w-full" viewBox="0 0 800 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of an online application checklist on a laptop">
+      <defs><linearGradient id="hbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1ece4"/><stop offset="1" stop-color="#dde2ea"/></linearGradient></defs>
+      <rect width="800" height="700" fill="url(#hbg)"/>
+      <rect x="560" y="50" width="190" height="250" fill="#fff" opacity=".5"/>
+      <g transform="translate(110 170)">
+        <rect width="580" height="350" rx="14" fill="#2b2f36"/>
+        <rect x="14" y="14" width="552" height="322" rx="6" fill="#f7f8fa"/>
+        <rect x="14" y="14" width="112" height="322" rx="6" fill="#3a3f48"/>
+        <rect x="150" y="38" width="130" height="24" rx="4" fill="#b3121e"/>
+        {% for y in [112, 162, 212, 262] %}
+        <circle cx="176" cy="{{ y }}" r="12" fill="#b3121e"/>
+        <path d="m170 {{ y }} 4 4 8-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="204" y="{{ y - 7 }}" width="{{ 300 - loop.index0 * 36 }}" height="14" rx="7" fill="#d9dde3"/>
+        {% endfor %}
+        <path d="M-44 350h668l-34 30H-10z" fill="#c9ccd2"/>
+      </g>
+    </svg>
+    {% endif %}
+    <a href="https://wa.me/{{ wa_number }}?text={{ 'Hello, I need a hand with an online service.'|urlencode }}" class="absolute bottom-0 left-4 block w-[18rem] bg-white p-6 text-brand-ink shadow-xl hover:bg-brand-cream sm:left-9 sm:w-[21rem] sm:p-7">
+      <span class="block text-lg text-brand-muted">Need a hand online?</span>
+      <b class="mt-1 block font-display text-xl sm:text-2xl">We’re one message away.</b>
+    </a>
+  </div>
+</section>
+
+<section id="about" class="py-16">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-2">
+    <h2 class="h2 max-w-[18ch]">Skip the queue. Skip the cyber café trip.</h2>
+    <div class="space-y-4">
+      <p>{{ biz }} helps students, parents, teachers and workers complete government and online applications without leaving the house. You send the details, we do the filling, submitting and follow-up.</p>
+      <p><b>Our mission:</b> make every important online service in Kenya simple, fast and affordable for ordinary people.</p>
+      {% for t, d in [(services|length ~ " services","Government, education and online accounts"),("Track every request","Use your tracking code to see progress any time")] %}
+      <div class="border-l-4 border-brand-red py-1 pl-4"><b class="block font-display text-lg">{{ t }}</b><span class="text-[15px] text-brand-muted">{{ d }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="services" class="svc-sec">
+  <div class="svc-wrap">
+    <h2 class="svc-title"><span>Our Services</span></h2>
+    <p class="svc-sub">Explore the online services we can help you with.</p>
+    {{ cards(services[:8]) }}
+    <p class="svc-all"><a href="/services">View all services and prices</a></p>
+  </div>
+</section>
+
+<section class="py-16">
+  <div class="mx-auto grid max-w-6xl gap-5 px-5 lg:grid-cols-3">
+    {% for key, title, blurb in [("government","Government services","Applications and account help for national agencies."),("education","Education services","Funding and support for your studies."),("online","Online services","Everyday accounts and records, handled for you.")] %}
+    <div id="{{ key }}" class="card p-6">
+      <h3 class="font-display text-2xl font-bold">{{ title }}</h3>
+      <p class="mb-4 mt-1 text-[15px] text-brand-muted">{{ blurb }}</p>
+      <ul class="mb-5">{% for s in groups[key] %}<li class="flex justify-between gap-3 border-t border-slate-300/70 py-2.5"><span>{{ s.name }}</span><span class="whitespace-nowrap font-semibold text-brand-red">{{ s.price|money }}</span></li>{% endfor %}</ul>
+      <a href="#start" class="btn btn-sm">Request a service</a>
+    </div>{% endfor %}
+  </div>
+</section>
+
+<section id="start" class="bg-brand-red/5 py-16">
+  <div class="mx-auto max-w-6xl px-5">
+    <h2 class="h2">Get started</h2>
+    <p class="mb-8 mt-3 max-w-[60ch] text-brand-muted">Fill in the form. You get a tracking code straight away, and we contact you on WhatsApp.</p>
+    {% if error %}<div role="alert" class="mb-4 max-w-xl rounded-xl bg-brand-red/10 px-4 py-3 text-brand-red">{{ error }}</div>{% endif %}
+    <form method="post" action="/request" class="card relative grid max-w-xl gap-4 p-6">
+      <label class="grid gap-1.5 text-sm font-semibold">Service
+        <select name="service" required class="field">
+          <option value="" disabled {% if not selected %}selected{% endif %}>Choose a service</option>
+          {% for s in services %}<option value="{{ s.slug }}" {% if s.slug == selected %}selected{% endif %}>{{ s.name }} – {{ s.price|money }}</option>{% endfor %}
+        </select></label>
+      <label class="grid gap-1.5 text-sm font-semibold">Your name
+        <input name="name" required minlength="2" maxlength="100" autocomplete="name" value="{{ form.get('name','') }}" class="field"></label>
+      <label class="grid gap-1.5 text-sm font-semibold">WhatsApp phone number
+        <input name="phone" required inputmode="tel" autocomplete="tel" placeholder="0712 345 678" value="{{ form.get('phone','') }}" class="field"></label>
+      <label class="grid gap-1.5 text-sm font-semibold">What do you need?
+        <textarea name="details" rows="4" maxlength="1000" placeholder="Example: I want to apply for my first HELB loan." class="field">{{ form.get('details','') }}</textarea></label>
+      <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px] h-px w-px opacity-0">
+      <button type="submit" class="btn">Submit request</button>
+    </form>
+    <p class="mt-3 text-sm text-brand-muted">Fees are for our service. Government agencies may charge their own fees separately.</p>
+  </div>
+</section>
+
+<section id="contact" class="py-16">
+  {% set shown = phone_display %}
+  <div class="mx-auto max-w-[1700px] px-5">
+    <div class="grid items-center gap-8 rounded-2xl bg-brand-red p-8 text-white md:grid-cols-[1.2fr_.8fr] md:p-12">
+      <div>
+        <h2 class="h2">Get it done with us.</h2>
+        <p class="mt-3 max-w-[44ch] text-lg text-white/85">Message us on WhatsApp or call. Tell us the service you need and we will guide you on the documents to send.</p>
+      </div>
+      <div class="grid gap-3 text-center">
+        <a href="https://wa.me/{{ wa_number }}" class="btn-ghost">WhatsApp {{ shown }}</a>
+        <a href="tel:+{{ wa_number }}" class="btn-ghost">Call {{ shown }}</a>
+        <a href="{{ channel_url }}" target="_blank" rel="noopener" class="btn-ghost">Join our WhatsApp Channel</a>
+        <a href="mailto:{{ contact_email }}" class="btn-ghost break-all">Email {{ contact_email }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}{{ biz }} – Government, Education & Online Services{% endblock %}</title>
+<link rel="icon" href="/static/logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Manrope:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/static/tailwind.css">
+<link rel="stylesheet" href="/static/site.css">
+</head>
+<body class="bg-brand-cream font-sans text-[17px] text-brand-ink antialiased">
+{% set path = request.url.path %}
+{% set cur = 'home' if path == '/' else 'track' if path.startswith('/track') else 'services' if path.startswith('/services') else 'about' if path.startswith('/about') else 'contact' if path.startswith('/contact') else '' %}
+{% set service_links = [("Government services","KUCCPS, KRA, HELB, NTSA, passports","/services#government"),("Education services","Scholarships and HELB support","/services#education"),("Online services","Payslips, TSC and SHA","/services#online"),("All services and prices","See the full list","/services")] %}
+<header class="site-header">
+  <div class="site-bar">
+    <a href="/" class="site-brand" aria-label="{{ biz }} home"><img src="/static/logo.png" alt="MM Cloud Softs logo"><span>MENDEX CLOUD SOFTS<small>KENYA</small></span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/" {% if cur == 'home' %}aria-current="page"{% endif %}>Home</a>
+      <div class="nav-dd" data-dd>
+        <button type="button" {% if cur == 'services' %}class="is-active" {% endif %}aria-haspopup="true" aria-expanded="false" aria-controls="services-menu">Services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="nav-dd-menu" id="services-menu">{% for n, d, h in service_links %}<a href="{{ h }}">{{ n }}<small>{{ d }}</small></a>{% endfor %}</div>
+      </div>
+      <a href="/track" {% if cur == 'track' %}aria-current="page"{% endif %}>Track Request</a>
+      <a href="/about" {% if cur == 'about' %}aria-current="page"{% endif %}>About</a>
+      <a href="/contact" {% if cur == 'contact' %}aria-current="page"{% endif %}>Contact</a>
+    </nav>
+    <div class="site-right">
+      <a href="/admin/login" class="nav-admin" aria-label="Admin Login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> <span class="nav-admin-text">Admin Login</span></a>
+      <button type="button" class="nav-burger" data-burger aria-expanded="false" aria-controls="m-menu" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </div>
+  <nav class="m-menu" id="m-menu" aria-label="Mobile">
+    <a href="/" {% if cur == 'home' %}aria-current="page"{% endif %}>Home</a>
+    <a href="/services" {% if cur == 'services' %}aria-current="page"{% endif %}>Services</a>
+    {% for n, d, h in service_links[:3] %}<a href="{{ h }}" class="m-sub">{{ n }}</a>{% endfor %}
+    <a href="/track" {% if cur == 'track' %}aria-current="page"{% endif %}>Track Request</a>
+    <a href="/about" {% if cur == 'about' %}aria-current="page"{% endif %}>About</a>
+    <a href="/contact" {% if cur == 'contact' %}aria-current="page"{% endif %}>Contact</a>
+    <a href="/admin/login" class="m-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Admin Login</a>
+  </nav>
+</header>
+<main>{% block content %}{% endblock %}</main>
+<section class="help-bar" aria-label="Need help?">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 11v6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.4" fill="#fff"/></svg>
+  <p><b>Need help?</b> Contact us on WhatsApp: <a href="https://wa.me/{{ wa_number }}">{{ phone_display }}</a> or email: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a></p>
+</section>
+<footer class="site-footer">
+  <div class="f-grid">
+    <div>
+      <div class="f-brand"><img src="/static/logo.png" alt="MM Cloud Softs logo"><b>MENDEX CLOUD SOFTS<br>KENYA</b></div>
+      <p class="f-about">Friendly help with government, education and everyday online services, so you can skip the queue.</p>
+    </div>
+    <div>
+      <h3>Quick links</h3>
+      <ul><li><a href="/">Home</a></li><li><a href="/services">Services</a></li><li><a href="/track">Track Request</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li><li><a href="/admin/login">Admin Login</a></li></ul>
+    </div>
+    <div>
+      <h3>Services</h3>
+      <ul><li><a href="/services#government">Government services</a></li><li><a href="/services#education">Education services</a></li><li><a href="/services#online">Online services</a></li><li><a href="/#start">Get started</a></li></ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul class="f-contact">
+        <li><a href="https://wa.me/{{ wa_number }}">WhatsApp {{ phone_display }}</a></li>
+        <li><a href="tel:+{{ wa_number }}">Call {{ phone_display }}</a></li>
+        <li><a href="mailto:{{ contact_email }}">{{ contact_email }}</a></li>
+        <li><a href="{{ channel_url }}" target="_blank" rel="noopener">WhatsApp Channel</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="f-bottom">© 2026 {{ biz }}. All rights reserved.</div>
+</footer>
+<a href="https://wa.me/{{ wa_number }}?text={{ 'Hello, I need help with a service.'|urlencode }}" aria-label="Chat on WhatsApp" class="wa-float">WhatsApp us</a>
+<script src="/static/js/app.js" defer></script>
+</body>
+</html>

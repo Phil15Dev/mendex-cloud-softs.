@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import csrf with context %}
+{% block title %}{{ 'Edit' if target else 'Add' }} administrator – Admin{% endblock %}
+{% block content %}
+<a href="/admin/team" class="text-sm font-medium text-brand-red hover:underline">← Team</a>
+<h1 class="mb-6 mt-2 text-3xl font-bold">{{ 'Edit ' ~ target.username if target else 'Add an administrator' }}</h1>
+<form method="post" action="{{ '/admin/team/' ~ target.id if target else '/admin/team' }}" class="card grid max-w-2xl gap-4 p-6">{{ csrf() }}
+  {% if not target %}<label class="grid gap-1.5 text-sm font-medium">Username<input name="username" required minlength="3" maxlength="64" autocomplete="off" class="field"></label>{% endif %}
+  <label class="grid gap-1.5 text-sm font-medium">Full name<input name="full_name" maxlength="100" value="{{ target.full_name if target else '' }}" class="field"></label>
+  <label class="grid gap-1.5 text-sm font-medium">Email (for password reset links)<input type="email" name="email" maxlength="254" value="{{ target.email if target else '' }}" class="field"></label>
+  <label class="grid gap-1.5 text-sm font-medium">Role
+    <select name="role_id" class="field">{% for ro in roles %}<option value="{{ ro.id }}" {% if target and target.role_id == ro.id %}selected{% endif %}>{{ ro.name|capitalize }} – {{ ro.description }}</option>{% endfor %}</select></label>
+  {% if target %}<label class="flex items-center gap-2 text-[15px]"><input type="checkbox" name="active" class="h-4 w-4 accent-brand-red" {% if target.active %}checked{% endif %}> Active (can sign in)</label>{% endif %}
+  <label class="grid gap-1.5 text-sm font-medium">{{ 'New password (leave empty to keep the current one)' if target else 'Temporary password (at least 10 characters)' }}<input type="password" name="password" autocomplete="new-password" maxlength="200" {{ '' if target else 'required' }} class="field"></label>
+  <div class="grid gap-1.5 border-t border-slate-300/70 pt-4"><label class="grid gap-1.5 text-sm font-medium">Confirm with your own password<input type="password" name="current_password" required autocomplete="current-password" class="field"></label>
+    <p class="text-sm text-brand-muted">Needed for changes to who can access the system. Changing a role, password or deactivating signs that person out immediately.</p></div>
+  <div class="flex gap-3"><button type="submit" class="btn btn-sm">{{ 'Save changes' if target else 'Create administrator' }}</button><a href="/admin/team" class="btn-outline btn-sm">Cancel</a></div>
+</form>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "auth/base.html" %}
+{% from "auth/_macros.html" import head, alert, field, submit %}
+{% block title %}Forgot Password – {{ biz }}{% endblock %}
+{% block card %}
+{{ head("mail", "Forgot Password", "Enter your registered email address") }}
+{% if sent %}
+{{ alert("ok", "If that email address is registered, a reset link is on its way. It works once and expires in 15 minutes.") }}
+{% else %}
+{% if error %}{{ alert("error", error) }}{% endif %}
+<form method="post" action="/admin/forgot-password" data-loading class="lg-form">
+  {{ field("mail", "email", "Email address", "email", "Enter your email", "email", 254, false, true) }}
+  {{ submit("Send reset link", "Sending…", false) }}
+</form>
+{% endif %}
+<p class="lg-center"><a href="/admin/login" class="lg-link">Back to login</a></p>
+{% endblock %}

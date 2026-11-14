@@ -1,0 +1,10 @@
+{% extends "public/base.html" %}
+{% block title %}Not allowed – {{ biz }}{% endblock %}
+{% block content %}
+<section class="py-20"><div class="mx-auto max-w-xl px-5 text-center">
+  <p class="font-display text-6xl font-extrabold text-brand-red">403</p>
+  <h1 class="mt-4 text-3xl font-bold">You can’t do that</h1>
+  <p class="mt-3 text-brand-muted">{{ message or "You do not have permission to open this page." }}</p>
+  <p class="mt-8 flex justify-center gap-3"><a href="/admin" class="btn">Back to dashboard</a><a href="/" class="btn-outline">Home</a></p>
+</div></section>
+{% endblock %}

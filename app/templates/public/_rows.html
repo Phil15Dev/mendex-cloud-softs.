@@ -1,0 +1,45 @@
+{% macro rows(items, flush=false) %}
+{% set icons = {
+ "cap": '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+ "bank": '<path d="M3 21h18M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/>',
+ "shield": '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+ "doc": '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 14l2 2 4-4"/>',
+ "user": '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'} %}
+{% set map = {"kuccps":"cap","kra-itax":"bank","helb":"cap","passport":"doc","scholarships":"cap","ntsa":"shield","ecitizen":"user","payslips":"doc","tsc":"user","nhif-sha":"shield","helb-docs":"doc"} %}
+<ul>
+{% for s in items %}
+<li><a href="/?service={{ s.slug }}#start" class="group flex items-center gap-4 border-b border-slate-300/70 py-5 hover:bg-brand-cream sm:gap-5 {% if not flush %}sm:py-7{% endif %}">
+  <span class="flex h-14 w-14 shrink-0 items-center justify-center bg-brand-tile text-brand-red sm:h-16 sm:w-16">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ icons[map.get(s.slug, "doc")]|safe }}</svg>
+  </span>
+  <span class="min-w-0 flex-1">
+    <span class="block font-display text-lg font-bold sm:text-xl">{{ s.name }}</span>
+    <span class="block text-brand-muted">{{ s.description }}</span>
+  </span>
+  <b class="whitespace-nowrap font-display text-base sm:text-lg">{{ s.price|money }}</b>
+  <svg class="shrink-0 text-slate-400 transition group-hover:translate-x-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+</a></li>
+{% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro cards(items) %}
+{% set icons = {
+ "cap": '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+ "bank": '<path d="M3 21h18M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/>',
+ "shield": '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+ "doc": '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 14l2 2 4-4"/>',
+ "user": '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'} %}
+{% set map = {"kuccps":"cap","kra-itax":"bank","helb":"cap","passport":"doc","scholarships":"cap","ntsa":"shield","ecitizen":"user","payslips":"doc","tsc":"user","nhif-sha":"shield","helb-docs":"doc"} %}
+<ul class="svc-cards">
+{% for s in items %}
+<li class="svc-card">
+  <span class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ icons[map.get(s.slug, "doc")]|safe }}</svg></span>
+  <h3>{{ s.name }}</h3>
+  <p>{{ s.description }}</p>
+  <b class="svc-price">{{ s.price|money }}</b>
+  <a href="/?service={{ s.slug }}#start" class="svc-more" aria-label="Learn more about {{ s.name }}">Learn More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</li>
+{% endfor %}
+</ul>
+{% endmacro %}

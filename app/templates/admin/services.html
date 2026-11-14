@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+{% block title %}Services – Admin{% endblock %}
+{% block content %}
+<div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+  <div><h1 class="text-3xl font-bold">Services and prices</h1><p class="mt-1 text-brand-muted">An empty price shows “Ask for quote”. Past requests keep the price they were made at.</p></div>
+  <a href="/admin/services/new" class="btn btn-sm">+ Add service</a>
+</div>
+<div class="card overflow-x-auto">
+  <table class="w-full min-w-[640px] text-left text-[15px]">
+    <thead class="border-b border-slate-300/70 bg-brand-cream text-sm text-brand-muted"><tr><th class="px-4 py-3 font-medium">Service</th><th class="px-4 py-3 font-medium">Shown under</th><th class="px-4 py-3 font-medium">Price</th><th class="px-4 py-3 font-medium">Status</th><th class="px-4 py-3"></th></tr></thead>
+    <tbody>{% for s in services %}
+      <tr class="border-b border-slate-300/70 last:border-0"><td class="px-4 py-3"><b>{{ s.name }}</b><br><span class="text-sm text-brand-muted">{{ s.description }}</span></td>
+        <td class="px-4 py-3 text-brand-muted">{{ s.categories|map(attribute='name')|join(' · ') }}</td>
+        <td class="px-4 py-3">{{ s.price|money }}</td>
+        <td class="px-4 py-3"><span class="badge {{ 'bg-emerald-100 text-emerald-800' if s.active else 'bg-slate-100 text-slate-600' }}">{{ 'Active' if s.active else 'Hidden' }}</span></td>
+        <td class="px-4 py-3 text-right"><a class="font-medium text-brand-red hover:underline" href="/admin/services/{{ s.id }}/edit">Edit</a></td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

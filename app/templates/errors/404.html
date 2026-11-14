@@ -1,0 +1,10 @@
+{% extends "public/base.html" %}
+{% block title %}Page not found – {{ biz }}{% endblock %}
+{% block content %}
+<section class="py-20"><div class="mx-auto max-w-xl px-5 text-center">
+  <p class="font-display text-6xl font-extrabold text-brand-red">{{ 400 if bad_request else 404 }}</p>
+  <h1 class="mt-4 text-3xl font-bold">{{ "That request was not valid" if bad_request else "Page not found" }}</h1>
+  <p class="mt-3 text-brand-muted">Check the address, or go back to the home page.</p>
+  <p class="mt-8"><a href="/" class="btn">Home</a></p>
+</div></section>
+{% endblock %}

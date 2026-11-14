@@ -1,0 +1,19 @@
+{% extends "public/base.html" %}
+{% block title %}Services and prices – {{ biz }}{% endblock %}
+{% block content %}
+<section class="pg">
+  <p class="pg-eyebrow">Our services</p>
+  <h1>Every service, with its price.</h1>
+  <p class="pg-lead">Government, education and everyday online services. Pick one and request it, and we will guide you on the documents to send.</p>
+  <div class="pg-grid three">
+    {% for key, title, blurb in [("government","Government services","Applications and account help for national agencies."),("education","Education services","Funding and support for your studies."),("online","Online services","Everyday accounts and records, handled for you.")] %}
+    <div id="{{ key }}" class="pg-card">
+      <h2>{{ title }}</h2>
+      <p class="mb">{{ blurb }}</p>
+      <ul class="svc-list">{% for s in groups.get(key, []) %}<li><a href="/?service={{ s.slug }}#start"><span>{{ s.name }}</span><b>{{ s.price|money }}</b></a></li>{% else %}<li><span>No services listed yet.</span></li>{% endfor %}</ul>
+    </div>{% endfor %}
+  </div>
+  <div class="pg-cta"><a href="/#start" class="btn px-7">Get Started</a><a href="/contact" class="btn-outline px-7">Ask a question</a></div>
+  <p class="pg-note">Fees are for our service. Government agencies may charge their own fees separately.</p>
+</section>
+{% endblock %}

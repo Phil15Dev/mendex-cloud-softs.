@@ -1,0 +1,47 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import csrf, status_badge with context %}
+{% block title %}{{ r.code }} – Admin{% endblock %}
+{% block content %}
+<a href="/admin/requests" class="text-sm font-medium text-brand-red hover:underline">← All requests</a>
+<div class="mb-6 mt-2 flex flex-wrap items-center gap-3"><h1 class="text-3xl font-bold">{{ r.code }}</h1>{{ status_badge(r.status) }}</div>
+
+<div class="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+  <div class="grid content-start gap-6">
+    <section class="card p-5">
+      <h2 class="text-lg font-bold">Customer and request</h2>
+      <dl class="mt-3 grid gap-3 text-[15px] sm:grid-cols-2">
+        <div><dt class="text-brand-muted">Customer</dt><dd>{% if 'customers.view' in perms %}<a class="font-medium text-brand-red hover:underline" href="/admin/customers/{{ r.customer.id }}">{{ r.customer.name }}</a>{% else %}{{ r.customer.name }}{% endif %}</dd></div>
+        <div><dt class="text-brand-muted">Phone</dt><dd><a class="font-medium text-brand-red hover:underline" target="_blank" rel="noopener" href="https://wa.me/{{ r.customer.phone }}?text={{ ('Hello ' ~ r.customer.name ~ ', about your request ' ~ r.code ~ ' (' ~ r.service_name ~ ').')|urlencode }}">+{{ r.customer.phone }} · WhatsApp</a>
+          <br><a class="text-sm font-medium text-brand-red hover:underline" target="_blank" rel="noopener" href="https://wa.me/{{ r.customer.phone }}?text={{ ('Hello ' ~ r.customer.name ~ ', your tracking code with ' ~ biz ~ ' is ' ~ r.code ~ ' for ' ~ r.service_name ~ '. Check progress any time: ' ~ base_url ~ '/track/' ~ r.code)|urlencode }}">Send tracking code on WhatsApp</a></dd></div>
+        <div><dt class="text-brand-muted">Service</dt><dd>{{ r.service_name }}</dd></div>
+        <div><dt class="text-brand-muted">Fee when requested</dt><dd>{{ r.fee|money }}</dd></div>
+        <div><dt class="text-brand-muted">Received</dt><dd>{{ r.created_at|eat }}</dd></div>
+        <div><dt class="text-brand-muted">Last update</dt><dd>{{ r.updated_at|eat }}</dd></div>
+      </dl>
+      <p class="mt-4 text-sm text-brand-muted">What they need</p>
+      <p class="whitespace-pre-line">{{ r.details or "No details given." }}</p>
+    </section>
+    <section class="card p-5">
+      <h2 class="text-lg font-bold">Timeline</h2>
+      <ol class="mt-3 grid gap-4 border-l-2 border-slate-300/70 pl-4 text-[15px]">
+        {% for h in r.history|reverse %}<li>{{ status_badge(h.to_status) }} <span class="text-brand-muted">{{ h.created_at|eat('%d %b %Y, %H:%M') }} · {{ h.actor }}</span>{% if h.message %}<p class="mt-1">{{ h.message }}</p>{% endif %}</li>{% endfor %}
+      </ol>
+    </section>
+  </div>
+
+  <div class="grid content-start gap-6">
+    {% if 'requests.update' in perms %}
+    <section class="card p-5">
+      <h2 class="text-lg font-bold">Update request</h2>
+      <form method="post" action="/admin/requests/{{ r.id }}/status" class="mt-3 grid gap-3">{{ csrf() }}
+        <label class="grid gap-1.5 text-sm font-medium">Status
+          <select name="status" class="field">{% for k, label in STATUS_LABELS.items() %}<option value="{{ k }}" {% if k == r.status %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+        <label class="grid gap-1.5 text-sm font-medium">Message to the customer
+          <textarea name="message" rows="3" maxlength="500" placeholder="Shown on their tracking page" class="field">{{ r.note }}</textarea></label>
+        <button type="submit" class="btn btn-sm justify-self-start">Save changes</button>
+      </form>
+    </section>{% endif %}
+
+  </div>
+</div>
+{% endblock %}

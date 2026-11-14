@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 6rem; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { @apply bg-brand-cream font-sans text-brand-ink; line-height: 1.6; }
+  h1, h2, h3, h4 { @apply font-display tracking-[-0.02em]; }
+  /* Body text is DM Sans 400/500; every 600-800 weight is Manrope */
+  b, strong, .font-semibold, .font-bold, .font-extrabold { font-family: "Manrope", system-ui, sans-serif; }
+  ::selection { background: #b3121e; color: #fff; }
+  ::placeholder { color: rgb(91 98 112 / 0.6); opacity: 1; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid #b3121e; outline-offset: 2px; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; }
+}
+
+@layer components {
+  .card { @apply rounded-xl border border-slate-300/70 bg-white; }
+  .btn { @apply inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-brand-red px-5 py-3 font-display text-base font-semibold text-white transition hover:bg-brand-redhover; }
+  .btn-sm { @apply min-h-[46px] px-4 py-2 text-[15px]; }
+  .btn-outline { @apply inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl border border-slate-300/70 bg-white px-5 py-3 font-display text-base font-semibold text-brand-ink transition hover:border-brand-red hover:text-brand-red; }
+  .btn-ghost { @apply inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl border-[1.5px] border-current px-5 py-3 font-display text-base font-semibold transition hover:bg-white/10; }
+  .btn-wa { @apply bg-brand-red hover:bg-brand-redhover; }
+  .field { @apply min-h-[46px] w-full rounded-lg border border-slate-300/70 bg-white px-3.5 py-2.5 text-base text-brand-ink; }
+  .field:focus { @apply border-brand-red outline-none; box-shadow: 0 0 0 3px rgb(179 18 30 / 0.2); }
+  .badge { @apply inline-block rounded-full px-3 py-1 text-sm font-semibold; }
+  .chip { @apply inline-block rounded-full bg-brand-tile px-3 py-1 text-sm font-semibold text-brand-navy; }
+  .h2 { @apply font-display text-3xl font-bold tracking-[-0.02em] sm:text-4xl; }
+}

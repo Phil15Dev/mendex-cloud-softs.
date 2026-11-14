@@ -1,0 +1,19 @@
+{% extends "public/base.html" %}
+{% block title %}About – {{ biz }}{% endblock %}
+{% block content %}
+<section class="pg">
+  <p class="pg-eyebrow">About us</p>
+  <h1>Online services, handled with care.</h1>
+  <p class="pg-lead">{{ biz }} helps students, parents, teachers and workers complete government, education and everyday online applications without leaving the house. You send the details, we do the filling, submitting and follow-up.</p>
+  <div class="pg-grid three">
+    <div class="pg-card"><span class="num">1</span><h2>Who we are</h2><p>A Kenyan online services desk. We work with the government portals and online accounts people use most, so you don't have to queue or travel to a cyber café.</p></div>
+    <div class="pg-card"><span class="num">2</span><h2>What we do</h2><p>{{ services|length }} services across government, education and online accounts, each with a clear price shown before you ask.</p></div>
+    <div class="pg-card"><span class="num">3</span><h2>How we work</h2><p>Request a service, get a tracking code straight away, and we contact you on WhatsApp. You can check progress any time.</p></div>
+  </div>
+  <div class="pg-grid two">
+    <div class="pg-card"><h2>Our approach to customer service</h2><p>Plain language, clear prices and one person to message. We tell you which documents to send and keep you updated until the request is complete.</p></div>
+    <div class="pg-card"><h2>Reliability and security</h2><p>Every request has its own tracking code and a status history. Only authorised staff can sign in to the admin area, with sessions that expire and sign-in attempts that are rate limited. Fees are for our service; government agencies may charge their own fees separately.</p></div>
+  </div>
+  <div class="pg-cta"><a href="/#start" class="btn px-7">Get Started</a><a href="/contact" class="btn-outline px-7">Contact us</a></div>
+</section>
+{% endblock %}

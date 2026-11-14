@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Admin – {{ biz }}{% endblock %}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/static/logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Manrope:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="/static/tailwind.css">
+</head>
+<body class="min-h-screen bg-brand-cream">
+{% from "admin/_macros.html" import csrf with context %}
+<header class="border-b border-slate-300/70 bg-white pt-[env(safe-area-inset-top,0px)]">
+  <div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-2">
+    <a href="/admin" class="flex shrink-0 items-center gap-3" aria-label="Admin home">
+      <img src="/static/logo.png" alt="" class="h-10 w-10 object-contain"><span class="chip">Admin</span>
+    </a>
+    <nav class="flex flex-1 gap-1 overflow-x-auto text-[15px] font-medium" aria-label="Admin sections">
+      {% for key, label, href, perm in [("dashboard","Dashboard","/admin","reports.view"),("requests","Requests","/admin/requests","requests.view"),("customers","Customers","/admin/customers","customers.view"),("services","Services","/admin/services","services.manage"),("reports","Reports","/admin/reports","reports.view"),("team","Team","/admin/team","admins.manage"),("audit","Audit log","/admin/audit","audit.view")] %}
+      {% if perm in perms %}<a href="{{ href }}" class="shrink-0 rounded-lg px-3 py-2 {% if nav_active == key %}bg-brand-red text-white{% else %}text-brand-muted hover:bg-brand-cream{% endif %}">{{ label }}</a>{% endif %}{% endfor %}
+    </nav>
+    <div class="flex shrink-0 items-center gap-3">
+      <a href="/admin/account" class="hidden text-sm text-brand-muted hover:text-brand-red sm:inline">{{ admin.display_name }}</a>
+      <form method="post" action="/admin/logout">{{ csrf() }}<button type="submit" class="btn-outline btn-sm">Log out</button></form>
+    </div>
+  </div>
+</header>
+<main class="mx-auto max-w-7xl px-5 py-8">
+  {% if flash %}<div role="{{ 'alert' if flash[0] == 'error' else 'status' }}" class="mb-6 rounded-lg px-4 py-3 text-[15px] font-medium {% if flash[0] == 'error' %}bg-brand-red/10 text-brand-red{% else %}bg-emerald-100 text-emerald-800{% endif %}">{{ flash[1] }}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<script src="/static/js/app.js" defer></script>
+</body>
+</html>
