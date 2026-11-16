@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta, timezone
 from pathlib import Path
 
@@ -28,7 +29,7 @@ def phone_display(number: str) -> str:
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent.parent / "templates"))
 templates.env.globals.update(
     biz=settings.business_name, wa_number=settings.whatsapp_number, channel_url=settings.whatsapp_channel_url,
-    contact_email=settings.contact_email, base_url=settings.public_base_url.rstrip('/'), phone_display=phone_display(settings.whatsapp_number), STATUS_LABELS=STATUS_LABELS, STATUS_STYLES=STATUS_STYLES,
+    contact_email=settings.contact_email, base_url=settings.public_base_url.rstrip('/'), on_vercel=bool(os.environ.get('VERCEL')), phone_display=phone_display(settings.whatsapp_number), STATUS_LABELS=STATUS_LABELS, STATUS_STYLES=STATUS_STYLES,
 )
 templates.env.filters["eat"] = eat
 templates.env.filters["money"] = lambda p: "Ask for quote" if p is None else f"KSh {p:,}"

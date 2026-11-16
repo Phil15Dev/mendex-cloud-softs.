@@ -74,5 +74,6 @@
 </footer>
 <a href="https://wa.me/{{ wa_number }}?text={{ 'Hello, I need help with a service.'|urlencode }}" aria-label="Chat on WhatsApp" class="wa-float">WhatsApp us</a>
 <script src="/static/js/app.js" defer></script>
+{% if on_vercel %}<script defer src="/_vercel/insights/script.js"></script>{% endif %}
 </body>
 </html>
