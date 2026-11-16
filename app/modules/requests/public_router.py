@@ -11,7 +11,7 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.templating import render
 from app.modules.notifications.models import Notification
-from app.modules.notifications.service import send_mail
+from app.modules.notifications.service import dispatch, send_mail
 from app.modules.services import service as services
 
 from . import service
@@ -46,8 +46,8 @@ def submit_request(request: Request, background: BackgroundTasks, service_slug: 
         return render_index(request, db, selected=service_slug, error=str(e), status=422,
                             form={"name": name, "phone": phone, "details": details})
     if settings.notify_admin_email:
-        background.add_task(send_mail, settings.notify_admin_email, f"New request {req.code}",
-                            f"{req.service_name} from {req.customer.name} ({req.customer.phone}).", "new_request")
+        dispatch(background, send_mail, settings.notify_admin_email, f"New request {req.code}",
+                 f"{req.service_name} from {req.customer.name} ({req.customer.phone}).", "new_request")
     return RedirectResponse(f"/track/{req.code}?new=1", status_code=303)
 
 
@@ -88,8 +88,8 @@ def contact_submit(request: Request, background: BackgroundTasks, name: str = Fo
     preview = f"Message from {name} ({contact}): {message}"
     db.add(Notification(kind="contact", message=(preview[:297] + "...") if len(preview) > 300 else preview))
     db.commit()
-    background.add_task(send_mail, settings.notify_admin_email or settings.contact_email,
-                        f"Website message from {name}", f"From: {name}\nReply to: {contact}\n\n{message}", "contact")
+    dispatch(background, send_mail, settings.notify_admin_email or settings.contact_email,
+             f"Website message from {name}", f"From: {name}\nReply to: {contact}\n\n{message}", "contact")
     return RedirectResponse("/contact?sent=1", status_code=303)
 
 

@@ -11,7 +11,7 @@ from app.core.security import (DUMMY_HASH, hash_password, needs_rehash, password
 from app.core.templating import render
 from app.core.utils import client_ip, utcnow
 from app.modules.admin.audit import log_action
-from app.modules.notifications.service import send_reset_email
+from app.modules.notifications.service import dispatch, send_reset_email
 
 from . import limits, service
 from .dependencies import AdminContext, admin_context, reauthenticate, require_perm_post
@@ -111,7 +111,7 @@ def forgot(request: Request, background: BackgroundTasks, email: str = Form(""),
             token = service.create_reset(db, account)
             log_action(db, request, "auth.password_reset_requested", account)
             db.commit()
-            background.add_task(send_reset_email, account.email, f"{settings.public_base_url.rstrip('/')}/admin/reset-password/{token}")
+            dispatch(background, send_reset_email, account.email, f"{settings.public_base_url.rstrip('/')}/admin/reset-password/{token}")
     return render(request, "auth/forgot.html", {"sent": True})  # same answer for every email
 
 

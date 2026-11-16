@@ -1,4 +1,5 @@
 import logging
+import os
 import smtplib
 from email.message import EmailMessage
 
@@ -37,6 +38,15 @@ def send_mail(to: str, subject: str, body: str, kind: str, dev_hint: str = "") -
     with SessionLocal() as db:
         db.add(EmailLog(to_address=to[:254], subject=subject[:200], kind=kind, status=status, error=error))
         db.commit()
+
+
+def dispatch(background, fn, *args) -> None:
+    """Run an email send after the response. On Vercel the function can be stopped as soon as the response
+    goes out, so there the email is sent first (send_mail never raises) and the page waits a moment."""
+    if os.environ.get("VERCEL"):
+        fn(*args)
+    else:
+        background.add_task(fn, *args)
 
 
 def send_reset_email(to: str, link: str) -> None:
