@@ -9,7 +9,7 @@ from app.core.database import get_db
 from app.core.flash import flash
 from app.core.security import (DUMMY_HASH, hash_password, needs_rehash, password_problem, verify_password)
 from app.core.templating import render
-from app.core.utils import utcnow
+from app.core.utils import client_ip, utcnow
 from app.modules.admin.audit import log_action
 from app.modules.notifications.service import send_reset_email
 
@@ -24,7 +24,7 @@ GENERIC_ERROR = "Invalid email or password."
 
 
 def ip_of(request: Request) -> str:
-    return request.client.host if request.client else "unknown"
+    return client_ip(request) or "unknown"
 
 
 def set_cookie(response, token: str, secure: bool) -> None:

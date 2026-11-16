@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.security import (IDLE_TIMEOUT, RESET_TTL, SESSION_MAX, aware, hash_password, new_token, sha256_hex)
-from app.core.utils import utcnow
+from app.core.utils import client_ip, utcnow
 from app.modules.admin.models import AdminRole
 from app.modules.admin.rbac import seed_rbac
 
@@ -44,7 +44,7 @@ def find_account(db: Session, username: str) -> Optional[AdminAccount]:
 def start_session(db: Session, account: AdminAccount, request: Request) -> str:
     token, now = new_token(), utcnow()
     db.add(AdminSession(account_id=account.id, token_hash=sha256_hex(token), created_at=now, last_seen_at=now,
-                        expires_at=now + SESSION_MAX, ip=(request.client.host if request.client else "")[:45],
+                        expires_at=now + SESSION_MAX, ip=client_ip(request)[:45],
                         user_agent=request.headers.get("user-agent", "")[:200]))
     account.last_login_at = now
     return token

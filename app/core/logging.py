@@ -4,6 +4,8 @@ import time
 import uuid
 from datetime import datetime, timezone
 
+from app.core.utils import client_ip
+
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -36,6 +38,6 @@ async def access_middleware(request, call_next):
     response.headers["X-Request-ID"] = rid
     if not request.url.path.startswith("/static"):
         access_log.info("request", extra={"request_id": rid, "method": request.method, "path": request.url.path,
-                                          "status": response.status_code, "ip": request.client.host if request.client else "",
+                                          "status": response.status_code, "ip": client_ip(request),
                                           "ms": round((time.perf_counter() - start) * 1000)})
     return response

@@ -1,4 +1,5 @@
 import math
+import os
 import re
 import secrets
 from dataclasses import dataclass
@@ -71,3 +72,13 @@ def phone_search_terms(q: str) -> list:
     if digits.startswith("2540"):
         digits = "254" + digits[4:]
     return [digits, "254" + digits[1:]] if digits.startswith("0") else [digits]
+
+
+def client_ip(request) -> str:
+    """The visitor's address. On Vercel every request arrives from the platform's proxy, so the real
+    address comes from the header Vercel sets itself; anywhere else the direct connection is used."""
+    if os.environ.get("VERCEL"):
+        fwd = request.headers.get("x-vercel-forwarded-for") or request.headers.get("x-real-ip") or ""
+        if fwd:
+            return fwd.split(",")[0].strip()[:45]
+    return request.client.host if request.client else ""
